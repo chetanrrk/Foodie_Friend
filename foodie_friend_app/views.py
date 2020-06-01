@@ -32,6 +32,7 @@ def getRestaurantRating(restaurantObj):
         rating = float(obj.restaurant.user_rating.aggregate_rating) ### rating out of 5
         votes = int(obj.restaurant.user_rating.votes) ### number of votes
         price = obj.restaurant.average_cost_for_two/2.0 ### price for one
+	return rating,votes,price
 
 ### find resturant with in a coord and cusines and return the ranking
 ### ranking (votes*rating + price)/sum_over_all_restaurants(votes*rating + price) 
@@ -45,8 +46,25 @@ def computeDistance(lat1,lon1,lat2,lon2):
         d = R * c
         return d ## distance in miles
 
-##city-->cusine-->restaurants-->rankings
-def getCusines(city,state,cusine): ## cityID int
+def score(restaurantsList):
+	votes=0
+	tmp=[]
+	finalList={}
+	for restura in restaurantsList:
+		resturaID,rating,votes,price = getRestaurantRating(restaura)
+		tmp.append([resturaID,rating,price])
+		totalVote+=votes
+	
+	for restura in tmp:
+		resturaID,rating,price = restura[0],restura[1]/totalVote,restura[2]
+		finalList.append({"id":resturaID,"rating":rating,"price":price})
+
+	return finalList
+	
+	
+### directly applying API's search function and modified ranking to list top choices 
+def getCusines(city,state,cusine,radius): 
+	"""
 	### finds matching city ID first
 	cities = common.get_cities(city)
 	for i in range(len(cities)):
@@ -63,7 +81,21 @@ def getCusines(city,state,cusine): ## cityID int
 	### TODO: finding matching restaurants serving cusine within a certain radius and generating rank
 	### TODO: finding matching restaurants serving cusine generating rank with distance info for users to decide
 	### TODO: ranking best "n" restaurants based on (votes*rating + price)/sum_over_all_restaurants(votes*rating + price)	
-	c=common.get_cuisines(292) ### 292 for Chicago
-        
+	c=common.get_cuisines(cityID) ### 292 for Chicago
+        """
 
+	### efficient way to filter using API's search function
+	"""
+	TODO:
+	1) Lets find latitude and longitude of current location
+	2) Lets find cusine id using cusine string
+	"""	
+	#restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000}) 
+	lat,lon = getCoords(address) ### TODO
+	cusineID = getCusineID(cusine) ###TODO
+	restaurantList = restaurant.search({"lat":lat,"lon":lon,"cuisines":cusineID,"radius":radius}) 
+
+	finalList = score(restaurantsList)
+
+	return finalList ### unsorted final list
 
