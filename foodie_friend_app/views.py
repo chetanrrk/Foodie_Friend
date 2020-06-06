@@ -61,6 +61,19 @@ def score(restaurantsList):
 
 	return finalList
 	
+def getGeoCoords():
+	ip_request = requests.get('https://get.geojs.io/v1/ip.json') 
+	my_ip = ip_request.json()['ip'] 
+
+	geo_request_url = 'https://get.geojs.io/v1/ip/geo/' + my_ip + '.json' 
+	geo_request = requests.get(geo_request_url) 
+	geo_data = geo_request.json() 
+	return geo_data['latitude'],geo_data['longitude'] ###lat,lon
+
+
+###TODO: get the cusine ID for the matching cusine (string)
+def getCusineID(cusine):
+	return cusineID
 	
 ### directly applying API's search function and modified ranking to list top choices 
 def getCusines(city,state,cusine,radius): 
@@ -91,7 +104,7 @@ def getCusines(city,state,cusine,radius):
 	2) Lets find cusine id using cusine string
 	"""	
 	#restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000}) 
-	lat,lon = getCoords(address) ### TODO
+	lat,lon = getGeoCoords() 
 	cusineID = getCusineID(cusine) ###TODO
 	restaurantList = restaurant.search({"lat":lat,"lon":lon,"cuisines":cusineID,"radius":radius}) 
 
