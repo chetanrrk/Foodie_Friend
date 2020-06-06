@@ -22,6 +22,8 @@ common = z.common
 location = z.location
 restaurants = z.restaurant
 
+cusines_map={} ### maps cusine name to its ID
+
 def getRestaurant(id): ### id= int
         return restaurants.get_restaurant(id)
 
@@ -71,8 +73,12 @@ def getGeoCoords():
 	return geo_data['latitude'],geo_data['longitude'] ###lat,lon
 
 
-###TODO: get the cusine ID for the matching cusine (string)
-def getCusineID(cusine):
+def getCusineID(cuineName,latitude,longitude):
+	if len(cusines_map)==0:
+		res = common.get_cuisines(lat=latitude,lon=longitude)
+		for r in res:
+			cusines_map[r.cuisine_name.lower()]=r.cuisine_id  
+	cusineID = cusines_map[cuineName.lower()]		
 	return cusineID
 	
 ### directly applying API's search function and modified ranking to list top choices 
@@ -105,10 +111,13 @@ def getCusines(city,state,cusine,radius):
 	"""	
 	#restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000}) 
 	lat,lon = getGeoCoords() 
-	cusineID = getCusineID(cusine) ###TODO
+	cusineID = getCusineID(cusine) 
 	restaurantList = restaurant.search({"lat":lat,"lon":lon,"cuisines":cusineID,"radius":radius}) 
 
 	finalList = score(restaurantsList)
 
+	###TODO: Lets sort this finalList based on our ranking or user's choice
+
 	return finalList ### unsorted final list
+
 
