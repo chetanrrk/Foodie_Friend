@@ -31,9 +31,9 @@ def getRestaurantLocation(restaurantObj,field="coords"): ## json obj
         return float(restaurantObj.restaurant.location.latitude),float(restaurantObj.restaurant.location.latitude)
 
 def getRestaurantRating(restaurantObj):
-        rating = float(obj.restaurant.user_rating.aggregate_rating) ### rating out of 5
-        votes = int(obj.restaurant.user_rating.votes) ### number of votes
-        price = obj.restaurant.average_cost_for_two/2.0 ### price for one
+	rating = float(obj.restaurant.user_rating.aggregate_rating) ### rating out of 5
+	votes = int(obj.restaurant.user_rating.votes) ### number of votes
+	price = obj.restaurant.average_cost_for_two/2.0 ### price for one
 	return rating,votes,price
 
 ### find resturant with in a coord and cusines and return the ranking
@@ -61,14 +61,14 @@ def score(restaurantsList):
 	
 	for restura in tmp:
 		resturaID,rating,price = restura[0],restura[1]/totalVote,restura[2]
-		#finalList.append({"id":resturaID,"rating":rating,"price":price})
-		tmpRes["id"]=["rating":rating,"price":price]		
+		# finalList.append({"id":resturaID,"rating":rating,"price":price})
+		tmpRes["id"] = {"rating":rating, "price":price}
 
-	sortedRes = sorted(tmpRes.items(), key=lambda x: x[1][0], reverse=True) ###sorts based on normalized rating
-	for r in sortedRes:
-		sortedResturants[r[0]] = r[1]
-		
-	return sortedResturants
+		sortedRes = sorted(tmpRes.items(), key=lambda x: x[1][0], reverse=True) ###sorts based on normalized rating
+		for r in sortedRes:
+			sortedResturants[r[0]] = r[1]
+			
+		return sortedResturants
 	
 def getGeoCoords():
 	ip_request = requests.get('https://get.geojs.io/v1/ip.json') 
