@@ -9,13 +9,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from zomato import Zomato
-
-def home(request):
-    context = {
-        'menus' : 'abc',
-    }
-    return render(request, 'foodie_friend_app/index.html', context)
-
+import requests
 
 z = Zomato("ef7a18bb9bda931d550f4965d60e5be7") ### zomato obj with key
 common = z.common
@@ -109,11 +103,29 @@ def getCusines(city,state,cusine,radius):
 	### efficient way to filter using API's search function
 	#example: restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000}) 
 	lat,lon = getGeoCoords() 
-	cusineID = getCusineID(cusine) 
+	cusineID = getCusineID(cusine, lat, lon) 
 	restaurantList = restaurants.search({"lat":lat,"lon":lon,"cuisines":cusineID,"radius":radius}) 
 
 	finalResult = score(restaurantsList)
 
 	return finalResult ### sorted final resturant based on normalized ratings
 
+def home(request):
+	### efficient way to filter using API's search function
+	#example: restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000}) 
+	lat,lon = getGeoCoords()
+	print(lat, lon)
+	cusine = 25
+	radius = 20000
+	cusineID = getCusineID(cusine, lat, lon)	
+	restaurantList = restaurants.search({"lat":lat,"lon":lon,"cuisines":cusineID,"radius":radius}) 
 
+	finalResult = score(restaurantsList) ### sorted final resturant based on normalized ratings
+	
+	print(finalResult)
+
+	context = {
+        'menus' : 'abc',
+		'result': finalResult
+    }
+	return render(request, 'foodie_friend_app/index.html', context)
