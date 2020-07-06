@@ -10,6 +10,8 @@ from matplotlib import pyplot as plt
 
 from zomato import Zomato
 import requests
+import json
+
 
 z = Zomato("ef7a18bb9bda931d550f4965d60e5be7")  # zomato obj with key
 common = z.common
@@ -49,10 +51,29 @@ def getRestaurantRating(restaurantObj):
     price: price indicator of a restaurant
     """
 
-    rating = float(restaurantObj.restaurant.user_rating.aggregate_rating)  # rating out of 5
-    votes = int(restaurantObj.restaurant.user_rating.votes)  # number of votes
-    price = restaurantObj.restaurant.average_cost_for_two / 2.0  # price for one
-    return rating, votes, price
+    results = {}  # return type
+
+    res_id = restaurantObj['R']['res_id']  # restaurant id
+    rating = float(restaurantObj['user_rating']['aggregate_rating'])  # rating out of 5
+    votes = int(restaurantObj['user_rating']['votes'])  # number of votes
+    price = restaurantObj['average_cost_for_two'] / 2.0  # price for one
+    name = restaurantObj['name']
+    url = restaurantObj['url']
+    address = restaurantObj['location']['address']  # add street
+    address = address + "\n" + restaurantObj['location']['city']  # add city
+    address = address + "\n" + restaurantObj['location']['zipcode']  # add zipcode
+    contact = restaurantObj['phone_numbers']
+
+    results["res_id"] = res_id
+    results["usr_rating"] = rating
+    results["votes"] = votes
+    results["price"] = price
+    results["name"] = name
+    results["url"] = url
+    results["address"] = address
+    results["contact"] = contact
+
+    return results
 
 
 def computeDistance(lat1, lon1, lat2, lon2):
@@ -76,28 +97,31 @@ def computeDistance(lat1, lon1, lat2, lon2):
 
 def score(restaurantsList):
     """
-    computes a normalized ratings based on votes recieved by a restaurant
+    computes a normalized ratings based on votes received by a restaurant
     @params
     restaurantsList: list of restaurants
     return: dictionary of restaurants sorted by their normalized rating
     """
 
     totalVote = 0
-    tmp = []
-    tmpRes = {}
+    tmp = {}  # contains dictionary of all restaurants that are hit
+    tmpRes = {}  # temporary dic to ease sorting
     sortedResturants = {}  # final rank based on normalized rating
-    for restaura in restaurantsList:
-        resturaID, rating, votes, price = getRestaurantRating(restaura)
-        tmp.append([resturaID, rating, price])
-        totalVote += votes
 
-    for restura in tmp:
-        resturaID, rating, price = restura[0], restura[1] / totalVote, restura[2]
-    tmpRes[resturaID] = {"rating": rating, "price": price}
+    for restaura in restaurantsList['restaurants']:
+        results = getRestaurantRating(restaura['restaurant'])
 
-    sortedRes = sorted(tmpRes.items(), key=lambda x: x[1][0], reverse=True)  # sorts based on normalized rating
+        tmp[results['res_id']] = results  # contains all hits that are unranked yet;
+        # restaurant id is the key
+        totalVote += results['votes']
+
+    for res in tmp:
+        tmp[res]['norm_rating'] = tmp[res]['usr_rating'] / totalVote
+        tmpRes[res] = tmp[res]['norm_rating']  # preparing only for sorting purpose
+
+    sortedRes = {k: v for k, v in sorted(tmpRes.items(), key=lambda item: item[1], reverse=True)}  # sorts based on normalized rating
     for r in sortedRes:
-        sortedResturants[r[0]] = r[1]
+        sortedResturants[r] = tmp[r]  # pulling all attributes of a restaurant using its ID
 
     return sortedResturants
 
@@ -145,18 +169,27 @@ def home(request):
     example: restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000})
     """
 
-    lat, lon = getGeoCoords()
-    print(lat, lon)
+    lat, lon = getGeoCoords()  # test example 41.801050, -87.590250
+    # print(lat, lon)
     cusine_name = "Italian"  # cusine name for now
-    radius = 20000  # test radius in miles for now
+    radius = 20000  # test radius in meters for now
     cusineID = getCusineID(cusine_name, lat, lon)
-    restaurantList = restaurants.search({"lat": lat, "lon": lon, "cuisines": cusineID, "radius": radius})
-    finalResult = score(restaurantList)  # sorted final resturant based on normalized ratings
-    print(finalResult)
+    # print("cusineID {}".format(cusineID))
 
+    """ searching based on current geo location, cusineID, and search radius in meters"""
+    restaurantList = restaurants.search({"lat": lat, "lon": lon, "cuisines": cusineID, "radius": radius})
+
+    """sorted final restaurant based on normalized ratings in json format"""
+    finalResult = json.dumps(score(restaurantList), indent=4)
+
+    # finalResult = score(restaurantList)  # results as regular dictionary
+    # for r in finalResult:
+    #    print("name {} \n address {}".format(finalResult[r]['name'], finalResult[r]['address']))
+
+    """Rendering the final results"""
     context = {
         'menus': 'abc',
-        'result': finalResult
+        'result': restaurantList #finalResult
     }
 
     return render(request, 'foodie_friend_app/index.html', context)
