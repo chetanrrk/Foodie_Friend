@@ -46,9 +46,7 @@ def getRestaurantRating(restaurantObj):
     returns a restaurant's attributes
     @params: restaurantObj
     @return
-    rating: rating of a restaurant
-    votes: number of votes for a restaurant
-    price: price indicator of a restaurant
+    results: python dictionary with restaurant's attributes
     """
 
     results = {}  # return type
