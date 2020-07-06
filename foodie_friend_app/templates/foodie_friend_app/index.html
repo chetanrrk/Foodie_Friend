@@ -14,9 +14,9 @@ My Contacts
 </div>
 <div class="container main-part">
   {% if result.restaurants %}
-  {% for restaurant in result.restaurants %}
-  {% include 'foodie_friend_app/partials/_card.html' %}
-  {% endfor %}
+    {% for restaurant in result.restaurants %}
+      {% include 'foodie_friend_app/partials/_card.html' %}
+    {% endfor %}
   {% else %}
   <p class="d-block font-weight-light my-2 heading">We could not find any restaruant near you!</p>
   {% endif %}
