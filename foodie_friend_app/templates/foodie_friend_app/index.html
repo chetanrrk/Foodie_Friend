@@ -7,20 +7,18 @@ My Contacts
 
 {% block content %}
 <div class="container">
-  <h3 class="heading font-weight-light">Here are your menus</h3>
+  <h3 class="heading font-weight-light">Here are the restaurants near you</h3>
   {# status #}
-  {{ result }}
   {% comment %} {{age}} {% endcomment %}
   <hr />
 </div>
 <div class="container main-part">
-
-  {% if menus %}
-  {% for menu in menus %}
+  {% if result.restaurants %}
+  {% for restaurant in result.restaurants %}
   {% include 'foodie_friend_app/partials/_card.html' %}
   {% endfor %}
   {% else %}
-  <p class="d-block font-weight-light my-2 heading">You have not saved any menus yet!</p>
+  <p class="d-block font-weight-light my-2 heading">We could not find any restaruant near you!</p>
   {% endif %}
 
 </div>

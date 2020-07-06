@@ -3,25 +3,29 @@
 <!-- Card for details -->
       <div class="card my-2 mx-2 
       {% if 'detail' in request.path %}mx-auto w-25{% endif %}
-      {% if menu.gender == "male"%}boy-card{% else %}girl-card{% endif %}">
-          <img src="{%if menu.image%}{{menu.image.url}}{%else%}
-            {% if menu.gender == "male"%} {%static 'foodie_friend_app/images/boy.png'%} {% else %}{%static 'foodie_friend_app/images/girl.png'%}{% endif %}
-          {%endif%}" class="img-fluid" />
+      {% if restaurant.restaurant.gender == "male"%}boy-card{% else %}girl-card{% endif %}">
+          <img src="{%static 'foodie_friend_app/images/no_image.jpg'%}" class="img-fluid" />
           <div class="card-header">
-            <a href="detail.html" class="text-white header-link"
-              ><i class="fas {% if menu.gender == "male"%}fa-mars{% else %}fa-venus{% endif %} mr-2"></i> {{menu.name}}</a
+            <a href="{{restaurant.restaurant.url}}" class="text-white header-link"
+              ><i class="fas fa-mars mr-2"></i> {{restaurant.restaurant.name}}</a
             >
           </div>
           <div class="card-body pb-0">
             <p>
               <i class="fas fa-at mr-2"></i>
-              <a href="mailto:{{menu.email}}">{{menu.email}}</a>
+              {{restaurant.restaurant.location.address}}
+            </p>
+            <p><i class="fas fa-info-circle mr-2"></i> {{restaurant.restaurant.user_rating.aggregate_rating}}</p>
+            <p><i class="fas fa-info-circle mr-2"></i> {{restaurant.restaurant.price_range}}</p>
+            <p>
+              <i class="fas fa-at mr-2"></i>
+              {{restaurant.restaurant.cuisines}}
             </p>
             <p>
               <i class="fas fa-phone mr-2"></i>
-              <a href="tel:{{menu.phone}}">{{menu.phone}}</a>
+              <a href="tel:{{restaurant.restaurant.phone_numbers}}">{{restaurant.restaurant.phone_numbers}}</a>
             </p>
-            <p><i class="fas fa-info-circle mr-2"></i> {{menu.info}}</p>
+            <p><i class="fas fa-info-circle mr-2"></i> {{restaurant.restaurant.highlights}}</p>
           </div>
         </div>
       <!-- Card for details ends -->

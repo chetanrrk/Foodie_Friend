@@ -1,0 +1,86 @@
+{
+    'restaurant': {
+        'R': {
+            'has_menu_status': {
+                'delivery': -1,
+                'takeaway': -1
+            },
+            'res_id': 16611721,
+            'is_grocery_store': False
+        },
+        'apikey': 'ef7a18bb9bda931d550f4965d60e5be7',
+        'id': '16611721',
+        'name': 'Blue Swimmer at Seahaven',
+        'url': 'https://www.zomato.com/gerroa-nsw/blue-swimmer-at-seahaven-gerroa?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1',
+        'location': {
+            'address': '19 Riverleigh Ave, Gerroa, Gerroa',
+            'locality': 'Gerroa',
+            'city': 'Gerroa',
+            'city_id': 2154,
+            'latitude': '-34.7697390000',
+            'longitude': '150.8117400000',
+            'zipcode': '2534',
+            'country_id': 14,
+            'locality_verbose': 'Gerroa, Gerroa'
+        },
+        'switch_to_order_menu': 0,
+        'cuisines': 'Modern Australian, Australian',
+        'timings': '7 AM to 3 PM (Mon, Tue, Wed, Thu, Sun), 7 AM to 3 PM, 5:30 PM to 11 PM (Fri-Sat)',
+        'average_cost_for_two': 20,
+        'price_range': 2,
+        'currency': '$',
+        'highlights': ['Cash', 'Breakfast', 'Lunch', 'No Alcohol Available', 'Dinner', 'Table booking recommended', 'Outdoor Seating'],
+        'offers': [],
+        'opentable_support': 0,
+        'is_zomato_book_res': 0,
+        'mezzo_provider': 'OTHER',
+        'is_book_form_web_view': 0,
+        'book_form_web_view_url': '',
+        'book_again_url': '',
+        'thumb': '',
+        'user_rating': {
+            'aggregate_rating': '3.9',
+            'rating_text': 'Good',
+            'rating_color': '9ACD32',
+            'rating_obj': {
+                'title': {
+                    'text': '3.9'
+                },
+                'bg_color': {
+                    'type': 'lime',
+                    'tint': '600'
+                }
+            },
+            'votes': 21
+        },
+        'all_reviews_count': 11,
+        'photos_url': 'https://www.zomato.com/gerroa-nsw/blue-swimmer-at-seahaven-gerroa/photos?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1#tabtop',
+        'photo_count': 15,
+        'menu_url': 'https://www.zomato.com/gerroa-nsw/blue-swimmer-at-seahaven-gerroa/menu?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1&openSwipeBox=menu&showMinimal=1#tabtop',
+        'featured_image': '',
+        'has_online_delivery': 0,
+        'is_delivering_now': 0,
+        'store_type': '',
+        'include_bogo_offers': True,
+        'deeplink': 'zomato://restaurant/16611721',
+        'is_table_reservation_supported': 0,
+        'has_table_booking': 0,
+        'events_url': 'https://www.zomato.com/gerroa-nsw/blue-swimmer-at-seahaven-gerroa/events#tabtop?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1',
+        'phone_numbers': '(02) 4234 3796',
+        'all_reviews': {
+            'reviews': [{
+                'review': []
+            }, {
+                'review': []
+            }, {
+                'review': []
+            }, {
+                'review': []
+            }, {
+                'review': []
+            }]
+        },
+        'establishment': ['Casual Dining'],
+        'establishment_types': []
+    }
+}
