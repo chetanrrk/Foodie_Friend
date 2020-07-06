@@ -21,10 +21,11 @@ cusines_map = {}  # maps cusine name to its ID
 
 def getRestaurant(id):  # id = int
     """
-	Returns a restaurant's details
-	@params id: restautant
-	@return: json object of restaurant
-	"""
+    Returns a restaurant's details
+    @params id: restautant
+    @return: json object of restaurant
+    """
+
     return restaurants.get_restaurant(id)
 
 
@@ -32,12 +33,22 @@ def getRestaurantLocation(restaurantObj):  # json obj
     """
     @param: restaurant object
     @return: latitude and longitude of a restaurant
-	"""
+    """
+
     return float(restaurantObj.restaurant.location.latitude), \
            float(restaurantObj.restaurant.location.latitude)
 
 
 def getRestaurantRating(restaurantObj):
+    """
+    returns a restaurant's attributes
+    @params: restaurantObj
+    @return
+    rating: rating of a restaurant
+    votes: number of votes for a restaurant
+    price: price indicator of a restaurant
+    """
+
     rating = float(restaurantObj.restaurant.user_rating.aggregate_rating)  # rating out of 5
     votes = int(restaurantObj.restaurant.user_rating.votes)  # number of votes
     price = restaurantObj.restaurant.average_cost_for_two / 2.0  # price for one
@@ -46,13 +57,14 @@ def getRestaurantRating(restaurantObj):
 
 def computeDistance(lat1, lon1, lat2, lon2):
     """
-	computes distance between two coordinates
-	@params
-	lat1, lon1: latitude and longitude of start point
-	lat2, lon2: latitude and longitude of end point
-	@return: distance in miles
-	source: https://andrew.hedges.name/experiments/haversine/ ; Haversine Formula
-	"""
+    computes distance between two coordinates
+    @params
+    lat1, lon1: latitude and longitude of start point
+    lat2, lon2: latitude and longitude of end point
+    @return: distance in miles
+    source: https://andrew.hedges.name/experiments/haversine/ ; Haversine Formula
+    """
+
     R = 3961  # radius of earth in mile
     dlon = lon2 - lon1
     dlat = lat2 - lat1
@@ -64,11 +76,11 @@ def computeDistance(lat1, lon1, lat2, lon2):
 
 def score(restaurantsList):
     """
-	computes a normalized ratings based on votes recieved by a restaurant
-	@params
-	restaurantsList: list of restaurants
-	return: dictionary of restaurants sorted by their normalized rating
-	"""
+    computes a normalized ratings based on votes recieved by a restaurant
+    @params
+    restaurantsList: list of restaurants
+    return: dictionary of restaurants sorted by their normalized rating
+    """
 
     totalVote = 0
     tmp = []
@@ -92,10 +104,11 @@ def score(restaurantsList):
 
 def getGeoCoords():
     """
-	captures latitude and longitude based on current location
-	@params: None
-	@return: latitude, longitude
-	"""
+    captures latitude and longitude based on current location
+    @params: None
+    @return: latitude, longitude
+    """
+
     ip_request = requests.get('https://get.geojs.io/v1/ip.json')
     my_ip = ip_request.json()['ip']
     geo_request_url = 'https://get.geojs.io/v1/ip/geo/' + my_ip + '.json'
@@ -106,15 +119,16 @@ def getGeoCoords():
 
 def getCusineID(cusineName, latitude, longitude):
     """
-	Given a cusine name and current location, returns its zomato cusineID.
-	Needed for searching restaurants information
-	@params
-	cusineName: string, name of the cusing, for example: "indian"
-	latitude: current latitude
-	longitude: current longitude
-	@return
-	cusnieID: int number in string format
-	"""
+    Given a cusine name and current location, returns its zomato cusineID.
+    Needed for searching restaurants information
+    @params
+    cusineName: string, name of the cusing, for example: "indian"
+    latitude: current latitude
+    longitude: current longitude
+    @return
+    cusnieID: int number in string format
+    """
+
     if len(cusines_map) == 0:  # checks if cusines_map is already populated
         res = common.get_cuisines(lat=latitude, lon=longitude)
         for r in res:
@@ -125,17 +139,17 @@ def getCusineID(cusineName, latitude, longitude):
 
 def home(request):
     """
-	Main function that gets called
-	@param: request object of cusine type
-	@return: ranked list of restaurants based on normalized ratings
-	example: restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000})
-	"""
+    Main function that gets called
+    @param: request object of cusine type
+    @return: ranked list of restaurants based on normalized ratings
+    example: restaurant.search({"lat":41.8013895,"lon":-87.589538,"cuisines":25,"radius":20000})
+    """
 
     lat, lon = getGeoCoords()
     print(lat, lon)
-    cusine = 25  # test id for now
+    cusine_name = "Italian"  # cusine name for now
     radius = 20000  # test radius in miles for now
-    cusineID = getCusineID(cusine, lat, lon)
+    cusineID = getCusineID(cusine_name, lat, lon)
     restaurantList = restaurants.search({"lat": lat, "lon": lon, "cuisines": cusineID, "radius": radius})
     finalResult = score(restaurantList)  # sorted final resturant based on normalized ratings
     print(finalResult)
