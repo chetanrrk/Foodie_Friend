@@ -1,24 +1,28 @@
 {% load static %}
 
 <!-- Card for details -->
-      <div class="card my-2 mx-2 
-      {% if 'detail' in request.path %}mx-auto w-25{% endif %}
-      {% if restaurant.restaurant.gender == "male"%}boy-card{% else %}girl-card{% endif %}">
+      <div class="card my-2 mx-2 {% if 'detail' in request.path %}mx-auto w-25{% endif %} boy-card">
           <img src="{%static 'foodie_friend_app/images/no_image.jpg'%}" class="img-fluid" />
+          <!-- <img src="{{restaurant.restaurant.photos_url}}" class="img-fluid" /> -->
+          
           <div class="card-header">
             <a href="{{restaurant.restaurant.url}}" class="text-white header-link"
-              ><i class="fas fa-mars mr-2"></i> {{restaurant.restaurant.name}}</a
+              ><i class="fas fa-wine-glass mr-2"></i> {{restaurant.restaurant.name}}</a
             >
           </div>
           <div class="card-body pb-0">
             <p>
-              <i class="fas fa-at mr-2"></i>
+              <i class="fas fa-map-marker-alt mr-2"></i>
               {{restaurant.restaurant.location.address}}
             </p>
-            <p><i class="fas fa-info-circle mr-2"></i> {{restaurant.restaurant.user_rating.aggregate_rating}}</p>
-            <p><i class="fas fa-info-circle mr-2"></i> {{restaurant.restaurant.price_range}}</p>
+            <p><i class="fas fa-star mr-2"></i> Average rating of {{restaurant.restaurant.user_rating.aggregate_rating}} from total {{restaurant.restaurant.all_reviews_count}} reviews</p>
+            <p><i class="far fa-money-bill-alt mr-2"></i> Price range: {{restaurant.restaurant.price_range}}</p>
             <p>
-              <i class="fas fa-at mr-2"></i>
+              <i class="fas fa-money-check-alt mr-2"></i>
+              Average cost for two: ${{restaurant.restaurant.average_cost_for_two}}
+            </p>
+            <p>
+              <i class="fas fa-utensils mr-2"></i>
               {{restaurant.restaurant.cuisines}}
             </p>
             <p>
