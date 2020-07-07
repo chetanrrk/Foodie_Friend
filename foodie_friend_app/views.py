@@ -91,6 +91,8 @@ def home(request):
     limit = 10  # number of restaurants to display
     restaurants = z.restaurant_search(radius=radius, cuisines=cuisines, limit=limit)
 
+    print(restaurants)
+
     """Rendering the final results"""
     context = {
         'menus': 'abc',
