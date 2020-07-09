@@ -6,4 +6,5 @@ app_name = 'foodie_friend_app'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('search/', views.search, name='search'),
 ]
