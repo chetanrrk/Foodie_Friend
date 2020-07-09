@@ -29,7 +29,7 @@
     <a class="logo" href="{% url 'foodie_friend_app:home' %}">
       <i class="fas fa-concierge-bell"></i> Foodie's Friend
     </a>    
-    <form class="form-inline my-2" action="search.html" method="POST">
+    <form class="form-inline my-2" action="{% url 'foodie_friend_app:search' %}" method="POST">
       {% csrf_token %}
       <input class="form-control" type="search" placeholder="Find cuisines..." name="search_term"
         value="{{search_term}}" />
