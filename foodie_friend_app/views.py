@@ -4,7 +4,7 @@ Created on Sun May 31 17:45:29 2020
 @authors: chetanrupakheti, milson
 """
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -100,3 +100,29 @@ def home(request):
     }
 
     return render(request, 'foodie_friend_app/index.html', context)
+
+
+# @login_required
+def search(request):
+    if request.POST:
+        search_term = request.POST['search_term']        
+        # TODO : logic to search the JSON cusines if contains not Restaurant Objects
+        # or we can set one variable to all Restaurants here and filter on that JSON object
+		# search_results = Resturant.objects.filter(cuisines__icontains=search_term)
+		# OR if we need to do more criteria based search do following ways
+        # search_results = Resturant.objects.filter(
+        #     Q(name__icontains=search_term) | 
+        #     Q(cuisines__icontains=search_term) |
+        #     Q(highlights__icontains=search_term) |
+        #     Q(phone__iexact=search_term)
+        # )
+        search_results = None # for testing
+
+        context = {
+            'search_term' : search_term,
+            'restaurants': search_results
+            # 'contacts': search_results.filter(manager = request.user)
+        }
+        return render(request, 'foodie_friend_app/search.html', context)
+    else:
+        return redirect('foodie_friend_app:home')
