@@ -91,7 +91,7 @@ def home(request):
     limit = 10  # number of restaurants to display
     restaurants = z.restaurant_search(radius=radius, cuisines=cuisines, limit=limit)
 
-    print(restaurants)
+    # print(restaurants)
 
     """Rendering the final results"""
     context = {
@@ -101,6 +101,23 @@ def home(request):
 
     return render(request, 'foodie_friend_app/index.html', context)
 
+
+def get_cuisine_id(cuisine_name):
+    """
+    return the zomato's cuisine ID for the given cuisine name
+    @params: cuisine_name string
+    @return: cuisine ID int
+    """
+
+    z = Zomato(key)
+    city_id = z.get_city_id()  # get zomato's current city's ID
+    cuisines = z.get_cuisines(city_id)  # gets all cuisines
+    print(cuisines)
+    for c in cuisines:
+        print(c.lower())
+        if c.lower() == cuisine_name.lower():
+            return cuisines[c]  # cuisine id (int)
+    raise Exception("your cuisine {} cannot be found!".format(cuisine_name))  # raises exception if no match is found
 
 # @login_required
 def search(request):
@@ -116,7 +133,18 @@ def search(request):
         #     Q(highlights__icontains=search_term) |
         #     Q(phone__iexact=search_term)
         # )
-        search_results = None # for testing
+
+        z = Zomato(key)
+        # leads to error prone and messy search
+        # cuisine_id = get_cuisine_id(search_term)  # gets cuisine id first for searching
+
+        # searching by query directly that Zomato handles well
+        cuisines = search_term  # this can be city name/s, comma separated string for multiple cuisines
+        radius = 200  # radius within the current location in meters
+        limit = 10  # number of restaurants to display
+        search_results = z.restaurant_search(radius=radius, query=cuisines, limit=limit)
+
+        print(search_results)
 
         context = {
             'search_term' : search_term,

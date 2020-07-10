@@ -14,4 +14,4 @@ requests==2.24.0
 six==1.15.0
 sqlparse==0.3.1
 urllib3==1.25.9
-zomato-distribution-api==0.2.1
+zomato-distribution-api==0.2.3
