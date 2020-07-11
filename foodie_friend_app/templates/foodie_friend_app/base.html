@@ -31,10 +31,29 @@
     </a>    
     <form class="form-inline my-2" action="{% url 'foodie_friend_app:search' %}" method="POST">
       {% csrf_token %}
-      <input class="form-control" type="search" placeholder="Find cuisines..." name="search_term"
+      <input class="form-control" type="search" placeholder="Search here..." name="search_term"
         value="{{search_term}}" />
       {% comment %} <button class="btn" type="submit"><i class="fas fa-search"></i></button> {% endcomment %}
+<!--      <input class="form-control" type="search" placeholder="radius" name="radius"-->
+<!--        value="{{radius}}" />-->
+<!--      {% comment %} <button class="btn" type="submit"><i class="fas fa-search"></i></button> {% endcomment %}-->
+<!--      <input class="form-control" type="search" placeholder="price" name="price"-->
+<!--        value="{{price}}" />-->
+<!--      {% comment %} <button class="btn" type="submit"><i class="fas fa-search"></i></button> {% endcomment %}-->
     </form>
+<!--    <form class="form-inline my-3" action="{% url 'foodie_friend_app:search' %}" method="POST">-->
+<!--      {% csrf_token %}-->
+<!--      <input class="form-control" type="search" placeholder="radius" name="radius"-->
+<!--        value="{{radius}}" />-->
+<!--      {% comment %} <button class="btn" type="submit"><i class="fas fa-search"></i></button> {% endcomment %}-->
+<!--    </form>-->
+<!--    <form class="form-inline my-4" action="{% url 'foodie_friend_app:search' %}" method="POST">-->
+<!--      {% csrf_token %}-->
+<!--      <input class="form-control" type="search" placeholder="price" name="price"-->
+<!--        value="{{price}}" />-->
+<!--      {% comment %} <button class="btn" type="submit"><i class="fas fa-search"></i></button> {% endcomment %}-->
+<!--    </form>-->
+
   </nav>
   <!-- Navbar ends -->
   <br />

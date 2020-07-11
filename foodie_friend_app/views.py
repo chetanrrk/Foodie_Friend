@@ -119,10 +119,91 @@ def get_cuisine_id(cuisine_name):
             return cuisines[c]  # cuisine id (int)
     raise Exception("your cuisine {} cannot be found!".format(cuisine_name))  # raises exception if no match is found
 
+
+def filter_by_price(search_results, price):
+    """
+    filters the search result by price
+    @params
+    search_results: zomato's search results of restaurants
+    price: price range of a user in int ranging from 1 cheapest and to a higher int for expensive
+    return:
+    search result of zomato within the user's price range
+    """
+
+    new_results = {}
+    new_results['results_found'] = 0
+    new_results['results_start'] = search_results['results_start']
+    new_results['results_shown'] = 0
+    new_results["restaurants"] = []
+
+    for i in range(len(search_results['restaurants'])):
+        try:
+            if int(search_results['restaurants'][i]['restaurant']['price_range']) <= price:
+                new_results["restaurants"].append(search_results['restaurants'][i])
+                new_results['results_found'] += 1
+                new_results['results_shown'] += 1
+        except IndexError:
+            continue
+
+    return new_results
+
+
+def compute_distance(lat1, lon1, lat2, lon2):
+    """
+    computes distance between two points given their latitude and longitude
+    @params
+    lat1, lon1 : latitude and longitude of starting point
+    lat2, lon2 : lagtitude and longitude of end point
+    """
+
+    R = 3961  # radius of earth in miles
+    dlon = np.radians(lon2 - lon1)
+    dlat = np.radians(lat2 - lat1)
+    a = (np.sin(dlat/2.0))**2 + np.cos(np.radians(lat1)) * np.cos(np.radians(lat2)) * (np.sin(dlon/2))**2
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
+    d = R * c
+    return d  # distance in miles
+
+
+def filter_by_radius(z, search_results, radius):
+    """
+    filters the search result by price
+    @params
+    search_results: zomato's search results of restaurants
+    radius: distance range of a user
+    search result of zomato within the user's desired radius
+    """
+    start_lat, start_lon = z.get_geo_coords()  # starting latitude and longitude
+
+    new_results = {}
+    new_results['results_found'] = 0
+    new_results['results_start'] = search_results['results_start']
+    new_results['results_shown'] = 0
+    new_results["restaurants"] = []
+
+    for i in range(len(search_results['restaurants'])):
+        try:
+            end_lat, end_lon = search_results['restaurants'][i]['restaurant']['location']['latitude'], \
+                               search_results['restaurants'][i]['restaurant']['location']['longitude']
+            distance = compute_distance(float(start_lat), float(start_lon),
+                                        float(end_lat), float(end_lon))  # distance between two places
+
+            if distance <= radius:
+                new_results["restaurants"].append(search_results['restaurants'][i])
+                new_results['results_found'] += 1
+                new_results['results_shown'] += 1
+        except IndexError:
+            continue
+
+    return new_results
+
+
 # @login_required
 def search(request):
     if request.POST:
-        search_term = request.POST['search_term']        
+        search_term = request.POST['search_term']
+        #radius = request.POST['radius']
+        #price = request.POST['price']
         # TODO : logic to search the JSON cusines if contains not Restaurant Objects
         # or we can set one variable to all Restaurants here and filter on that JSON object
 		# search_results = Resturant.objects.filter(cuisines__icontains=search_term)
@@ -140,15 +221,21 @@ def search(request):
 
         # searching by query directly that Zomato handles well
         cuisines = search_term  # this can be city name/s, comma separated string for multiple cuisines
-        radius = 200  # radius within the current location in meters
-        limit = 10  # number of restaurants to display
-        search_results = z.restaurant_search(radius=radius, query=cuisines, limit=limit)
+        radius = 6  # radius in miles from the current location
+        price = 3  # price to filter by
+        limit = 2000  # number of restaurants to display
+        search_results = z.restaurant_search(query=cuisines, limit=limit)
 
-        print(search_results)
+        if price is not None:
+            new_results = filter_by_price(search_results, price)
+
+        if radius is not None:
+            new_results = filter_by_radius(z, new_results, radius)
+
 
         context = {
             'search_term' : search_term,
-            'restaurants': search_results
+            'restaurants': new_results
             # 'contacts': search_results.filter(manager = request.user)
         }
         return render(request, 'foodie_friend_app/search.html', context)
