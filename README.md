@@ -6,7 +6,7 @@ The code automatically detects the current location (by default) or takes a adre
 
 ## How to run locally
 
-`git clone` this repository.
+`git clone` https://github.com/chetanrrk/Foodie_Friend.
 
 `cd foodie_friend`.
 
