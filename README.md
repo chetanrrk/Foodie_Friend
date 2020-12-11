@@ -1,4 +1,8 @@
-### Welcome to the Foodie's Friend Application.
+# Welcome to the Foodie's Friend Application.
+
+This application Django and zomato API to locate the restaurants near you based on distance and price.
+The code automatically detects the current location (by default) or takes a adress to display desired choices.
+
 
 ## How to run locally
 
